@@ -13,7 +13,8 @@ public class PolizaController {
     private final AutomovilService automovilService;
     private final SeguroService seguroService;
 
-    public PolizaController(PropietarioService propietarioService, AutomovilService automovilService, SeguroService seguroService) {
+    public PolizaController(PropietarioService propietarioService, AutomovilService automovilService,
+            SeguroService seguroService) {
         this.propietarioService = propietarioService;
         this.automovilService = automovilService;
         this.seguroService = seguroService;
@@ -22,9 +23,10 @@ public class PolizaController {
     @PostMapping
     public ResponseEntity<PolizaResponse> crearPoliza(@RequestBody PolizaRequest req) {
         // Crear propietario
+        // Se envía el apellido explícitamente desde el request
         PropietarioDTO propietarioDTO = propietarioService.crear(
-                new PropietarioDTO(null, req.getPropietario(), req.getEdadPropietario(), null)
-        );
+                new PropietarioDTO(null, req.getPropietario(), req.getApellidoPropietario(), req.getEdadPropietario(),
+                        null));
 
         // Crear auto
         AutomovilDTO autoDTO = new AutomovilDTO(null, req.getModeloAuto(), req.getValorSeguroAuto(),
@@ -36,23 +38,25 @@ public class PolizaController {
 
         // Armar respuesta
         PolizaResponse response = new PolizaResponse(
-                propietarioDTO.getNombreCompleto(),
+                propietarioDTO.getNombre(),
+                propietarioDTO.getApellido(),
                 autoDTO.getModelo(),
                 autoDTO.getValor(),
                 propietarioDTO.getEdad(),
                 autoDTO.getAccidentes(),
-                seguroDTO.getCostoTotal()
-        );
+                seguroDTO.getCostoTotal());
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/usuario")
     public ResponseEntity<PolizaResponse> obtenerPolizaPorNombre(@RequestParam String nombre) {
-        // Buscar propietario por nombre
+        // Buscar propietario por nombre (nota: esto usa la lógica de split en el
+        // servicio si se pasa "nombre apellido")
         PropietarioDTO propietarioDTO = propietarioService.buscarPorNombre(nombre);
 
-        // Obtener auto más reciente del propietario (asumimos el último por ID o el primero)
+        // Obtener auto más reciente del propietario (asumimos el último por ID o el
+        // primero)
         Long propietarioId = propietarioDTO.getId();
         AutomovilDTO autoDTO = automovilService.obtenerPorPropietarioId(propietarioId);
 
@@ -61,13 +65,13 @@ public class PolizaController {
 
         // Armar respuesta
         PolizaResponse response = new PolizaResponse(
-                propietarioDTO.getNombreCompleto(),
+                propietarioDTO.getNombre(),
+                propietarioDTO.getApellido(),
                 autoDTO.getModelo(),
                 autoDTO.getValor(),
                 propietarioDTO.getEdad(),
                 autoDTO.getAccidentes(),
-                seguroDTO.getCostoTotal()
-        );
+                seguroDTO.getCostoTotal());
 
         return ResponseEntity.ok(response);
     }

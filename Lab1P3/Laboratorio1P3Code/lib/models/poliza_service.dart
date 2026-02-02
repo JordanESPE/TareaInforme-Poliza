@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 class PolizaRequest {
   final String propietario;
+  final String apellidoPropietario;
   final String edadPropietario;
   final String modeloAuto;
   final double valorSeguroAuto;
@@ -10,6 +11,7 @@ class PolizaRequest {
 
   PolizaRequest({
     required this.propietario,
+    required this.apellidoPropietario,
     required this.edadPropietario,
     required this.modeloAuto,
     required this.valorSeguroAuto,
@@ -19,6 +21,7 @@ class PolizaRequest {
   Map<String, dynamic> toJson() {
     return {
       'propietario': propietario,
+      'apellidoPropietario': apellidoPropietario,
       'edadPropietario': edadPropietario,
       'modeloAuto': modeloAuto,
       'valorSeguroAuto': valorSeguroAuto,
@@ -29,6 +32,7 @@ class PolizaRequest {
 
 class PolizaResponse {
   final String propietario;
+  final String apellidoPropietario;
   final String modelo;
   final double valor;
   final String edad;
@@ -37,6 +41,7 @@ class PolizaResponse {
 
   PolizaResponse({
     required this.propietario,
+    required this.apellidoPropietario,
     required this.modelo,
     required this.valor,
     required this.edad,
@@ -47,6 +52,7 @@ class PolizaResponse {
   factory PolizaResponse.fromJson(Map<String, dynamic> json) {
     return PolizaResponse(
       propietario: json['propietario'],
+      apellidoPropietario: json['apellidoPropietario'],
       modelo: json['modelo'],
       valor: json['valor'].toDouble(),
       edad: json['edad'],
@@ -58,7 +64,7 @@ class PolizaResponse {
 
 class PolizaService {
   // URL base del backend - ajusta el puerto si es necesario
-  static const String baseUrl = 'http://localhost:9090/bdd_dto';
+  static const String baseUrl = 'http://10.0.2.2:9090/bdd_dto';
 
   Future<PolizaResponse> crearPoliza(PolizaRequest request) async {
     try {

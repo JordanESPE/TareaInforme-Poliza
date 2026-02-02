@@ -2,14 +2,17 @@ package com.example.bdd_dto.dto;
 
 public class PolizaResponse {
     private String propietario;
+    private String apellidoPropietario;
     private String modeloAuto;
     private double valorSeguroAuto;
     private int edadPropietario;
     private int accidentes;
     private double costoTotal;
 
-    public PolizaResponse(String propietario, String modeloAuto, double valorSeguroAuto, int edadPropietario, int accidentes, double costoTotal) {
+    public PolizaResponse(String propietario, String apellidoPropietario, String modeloAuto, double valorSeguroAuto,
+            int edadPropietario, int accidentes, double costoTotal) {
         this.propietario = propietario;
+        this.apellidoPropietario = apellidoPropietario;
         this.modeloAuto = modeloAuto;
         this.valorSeguroAuto = valorSeguroAuto;
         this.edadPropietario = edadPropietario;
@@ -18,10 +21,31 @@ public class PolizaResponse {
     }
 
     // Getters
-    public String getPropietario() { return propietario; }
-    public String getModeloAuto() { return modeloAuto; }
-    public double getValorSeguroAuto() { return valorSeguroAuto; }
-    public int getEdadPropietario() { return edadPropietario; }
-    public int getAccidentes() { return accidentes; }
-    public double getCostoTotal() { return costoTotal; }
+    public String getPropietario() {
+        return propietario;
+    }
+
+    public String getApellidoPropietario() {
+        return apellidoPropietario;
+    }
+
+    public String getModeloAuto() {
+        return modeloAuto;
+    }
+
+    public double getValorSeguroAuto() {
+        return valorSeguroAuto;
+    }
+
+    public int getEdadPropietario() {
+        return edadPropietario;
+    }
+
+    public int getAccidentes() {
+        return accidentes;
+    }
+
+    public double getCostoTotal() {
+        return costoTotal;
+    }
 }

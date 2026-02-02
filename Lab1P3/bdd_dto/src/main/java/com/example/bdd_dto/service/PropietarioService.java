@@ -21,10 +21,9 @@ public class PropietarioService {
             throw new RuntimeException("El propietario debe ser mayor de edad");
         }
 
-        String[] nombres = propietarioDTO.getNombreCompleto().split(" ");
         Propietario propietario = new Propietario();
-        propietario.setNombre(nombres[0]);
-        propietario.setApellido(nombres.length > 1 ? nombres[1] : "");
+        propietario.setNombre(propietarioDTO.getNombre());
+        propietario.setApellido(propietarioDTO.getApellido());
         propietario.setEdad(propietarioDTO.getEdad());
 
         Propietario guardado = propietarioRepository.save(propietario);
@@ -47,9 +46,8 @@ public class PropietarioService {
         Propietario propietario = propietarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Propietario no encontrado"));
 
-        String[] nombres = propietarioDTO.getNombreCompleto().split(" ");
-        propietario.setNombre(nombres[0]);
-        propietario.setApellido(nombres.length > 1 ? nombres[1] : "");
+        propietario.setNombre(propietarioDTO.getNombre());
+        propietario.setApellido(propietarioDTO.getApellido());
         propietario.setEdad(propietarioDTO.getEdad());
 
         Propietario actualizado = propietarioRepository.save(propietario);
@@ -66,25 +64,29 @@ public class PropietarioService {
     private PropietarioDTO convertirADTO(Propietario propietario) {
         PropietarioDTO dto = new PropietarioDTO();
         dto.setId(propietario.getId());
-        dto.setNombreCompleto(propietario.getNombre() + " " + propietario.getApellido());
+        dto.setNombre(propietario.getNombre());
+        dto.setApellido(propietario.getApellido());
         dto.setEdad(propietario.getEdad());
 
         if (propietario.getAutomoviles() != null) {
             dto.setAutomovilIds(propietario.getAutomoviles().stream()
                     .map(a -> a.getId())
                     .collect(Collectors.toList()));
+
+            dto.setModelos(propietario.getAutomoviles().stream()
+                    .map(a -> a.getModelo())
+                    .collect(Collectors.toList()));
         }
 
         return dto;
     }
-    public PropietarioDTO buscarPorNombre(String nombreCompleto) {
-        String[] partes = nombreCompleto.split(" ");
-        String nombre = partes[0];
-        String apellido = partes.length > 1 ? partes[1] : "";
 
+    // Modificado para búsquedas parciales (insensitive case)
+    public PropietarioDTO buscarPorNombre(String nombreBusqueda) {
+        // Buscamos por coincidencia parcial en nombre O apellido
         Propietario propietario = propietarioRepository
-                .findByNombreAndApellido(nombre, apellido)
-                .orElseThrow(() -> new RuntimeException("Propietario no encontrado con nombre: " + nombreCompleto));
+                .findFirstByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCase(nombreBusqueda, nombreBusqueda)
+                .orElseThrow(() -> new RuntimeException("Propietario no encontrado con: " + nombreBusqueda));
 
         return convertirADTO(propietario);
     }

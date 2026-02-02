@@ -76,6 +76,16 @@ class PolicyForm extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           TextField(
+            decoration: const InputDecoration(
+              labelText: 'Apellido Propietario',
+              border: OutlineInputBorder(),
+              filled: true,
+            ),
+            enabled: !policyState.isLoading,
+            onChanged: policyController.setOwnerLastName,
+          ),
+          const SizedBox(height: 10),
+          TextField(
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               labelText: 'Valor del seguro',
@@ -150,14 +160,20 @@ class PolicyForm extends ConsumerWidget {
           ),
 
           const SizedBox(height: 10),
-          // CheckBox
-          CheckboxListTile(
-            title: const Text('Número de accidentes (Tiene?)'),
-            subtitle: const Text('Aplica recargo'),
-            value: policyState.hasAccidents,
-            onChanged: policyState.isLoading
-                ? null
-                : policyController.toggleAccidents,
+          // Accidents Input (Changed from Switch to TextField)
+          TextField(
+            decoration: const InputDecoration(
+              labelText: 'Número de Accidentes',
+              hintText: 'Ingrese el número de accidentes',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.warning),
+            ),
+            keyboardType: TextInputType.number,
+            enabled: !policyState.isLoading,
+            // Initial value could be handled if necessary, but controller manages state
+            // controller: TextEditingController(text: policyState.accidents.toString()),
+            // Using onChanged to update state directly
+            onChanged: (value) => policyController.setAccidents(value),
           ),
 
           const SizedBox(height: 20),

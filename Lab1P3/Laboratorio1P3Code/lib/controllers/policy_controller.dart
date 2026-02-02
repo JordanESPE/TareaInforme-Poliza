@@ -12,6 +12,10 @@ class PolicyController extends Notifier<PolicyState> {
     state = state.copyWith(ownerName: name);
   }
 
+  void setOwnerLastName(String lastName) {
+    state = state.copyWith(ownerLastName: lastName);
+  }
+
   void setInsuranceValue(String value) {
     final double? parsedValue = double.tryParse(value);
     if (parsedValue != null) {
@@ -27,8 +31,11 @@ class PolicyController extends Notifier<PolicyState> {
     state = state.copyWith(ageRange: range);
   }
 
-  void toggleAccidents(bool? value) {
-    state = state.copyWith(hasAccidents: value ?? false);
+  void setAccidents(String value) {
+    final int? parsedValue = int.tryParse(value);
+    if (parsedValue != null) {
+      state = state.copyWith(accidents: parsedValue);
+    }
   }
 
   /// Create a new policy by calling the backend API
@@ -67,17 +74,18 @@ class PolicyController extends Notifier<PolicyState> {
     // Set loading state
     state = state.copyWith(
       isLoading: true,
-      errorMessage: null,
-      successMessage: null,
+      clearError: true,
+      clearSuccess: true,
     );
 
     try {
       final response = await ApiService.createPolicy(
         propietario: state.ownerName,
+        apellidoPropietario: state.ownerLastName,
         edadPropietario: edadPropietario,
         modeloAuto: state.selectedModel,
         valorSeguroAuto: state.insuranceValue,
-        accidentes: state.hasAccidents,
+        accidentes: state.accidents,
       );
 
       // Extract cost from response
@@ -108,9 +116,9 @@ class PolicyController extends Notifier<PolicyState> {
 
     state = state.copyWith(
       isLoading: true,
-      errorMessage: null,
-      successMessage: null,
-      searchResult: null,
+      clearError: true,
+      clearSuccess: true,
+      clearSearch: true,
     );
 
     try {

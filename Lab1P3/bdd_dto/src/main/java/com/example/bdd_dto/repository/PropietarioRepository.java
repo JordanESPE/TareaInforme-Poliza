@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface PropietarioRepository extends JpaRepository<Propietario, Long> {
     Optional<Propietario> findByNombreAndApellido(String nombre, String apellido);
 
+    Optional<Propietario> findFirstByNombreContainingIgnoreCaseOrApellidoContainingIgnoreCase(String nombre,
+            String apellido);
 }

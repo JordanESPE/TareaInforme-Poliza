@@ -119,7 +119,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
                         ),
                         _buildDetailRow(
                           'Modelo',
-                          policyState.searchResult!['modelo'] ?? 'N/A',
+                          policyState.searchResult!['modeloAuto'] ?? 'N/A',
                           Icons.directions_car,
                         ),
                         _buildDetailRow(
