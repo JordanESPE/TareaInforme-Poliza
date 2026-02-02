@@ -1,0 +1,478 @@
+\UseRawInputEncoding
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{longtable}
+
+\geometry{margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\titleformat{\section}{\bfseries\large}{\thesection.}{1em}{}
+\titleformat{\subsection}{\bfseries}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Controles Avanzados}
+\lhead{Informe}
+\rfoot{\thepage}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single
+}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstdefinelanguage{yaml}{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{blue}\bfseries,
+  basicstyle=\ttfamily\small,
+  sensitive=false,
+  comment=[l]{\#},
+  commentstyle=\color{codegreen},
+  stringstyle=\color{red},
+  moredelim=[l][\color{magenta}]{:},
+  moredelim=[s][\color{codepurple}]{[}{]},
+  moredelim=[s][\color{codepurple}]{\{}{\}},
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+    
+    \begin{center}
+        \textbf{\Large Informe 2.1: Crear una aplicación móvil utilizando controles avanzados.}\\[0.5cm]
+    \end{center}
+    
+    \section{Datos Generales}
+    
+    \begin{tabular}{|p{5cm}|p{9cm}|}
+        \hline
+        \textbf{Título del Informe:} & Desarrollar una aplicación móvil utilizando controles avanzados\\ \hline
+        \textbf{Autor(a):} & Caetano Flores, Jordan Guaman, Anthony Morales, Leonardo Narvaez \\ \hline
+        \textbf{Carrera:} & Ingeniería en Software \\ \hline
+        \textbf{Asignatura o Proyecto:} & Aplicaciones Moviles \\ \hline
+        \textbf{Tutor o Supervisor:} & Doris Chicaiza \\ \hline
+        \textbf{Institución:} & Universidad de las Fuerzas Armadas ESPE – Matriz \\ \hline
+        \textbf{Fecha de entrega:} & 6 de Diciembre del 2025  \\ \hline
+    \end{tabular}
+    
+    \vspace{1cm}
+    
+    \tableofcontents
+    \newpage
+    
+    \section{Introducción}
+
+Este proyecto desarrolla una aplicación móvil en Flutter que consume la DragonBall API rest, aplicando una Arquitectura Limpia y el patrón MVVM con Provider como gestor de estado. Se destacan mejoras de diseño avanzado mediante ListView y GridView, además de una navegación fluida gestionada por BottomNavigationBar. La experiencia visual se enriquece significativamente con animaciones Shimmer, Lottie y transiciones Fade In, culminando con el despliegue del aplicativo en Firebase App Distribution para pruebas.
+
+Para la implementación se utilizó el lenguaje Dart y el framework Flutter. La gestión de recursos visuales se apoyó en paquetes externos como lottie para animaciones vectoriales y shimmer para efectos de carga, optimizando la respuesta visual del usuario. Todo el desarrollo se realizó bajo buenas prácticas de ingeniería de software, utilizando un entorno de desarrollo integrado para asegurar un código eficiente.
+
+Como conclusión, este trabajo consolida la integración técnica de servicios web externos con una interfaz de usuario pulida, reactiva y altamente interactiva. La correcta aplicación de animaciones modernas y una arquitectura modular garantiza no solo una aplicación funcional y escalable, sino también una experiencia de usuario final de alta calidad. El proyecto demuestra la capacidad de unir lógica compleja con un diseño estético y fluido.
+
+    \section{Objetivos}
+
+\subsection{Objetivo General}
+
+Desarrollar una aplicación móvil robusta y estéticamente atractiva utilizando Flutter, que consuma la API de Dragon Ball, implementando una arquitectura de software limpia y patrones de diseño modernos para garantizar la escalabilidad y mantenibilidad del código.
+
+\subsection{Objetivos Específicos}
+
+\begin{itemize}
+    \item Implementar el patrón arquitectónico Clean Architecture junto con MVVM y Provider para separar claramente la lógica de negocio, la interfaz de usuario y la capa de datos.
+    
+    \item Diseñar una interfaz de usuario versátil que permita visualizar la información en formato de lista (\texttt{ListView}) y cuadrícula (\texttt{GridView}), gestionada a través de un \texttt{BottomNavigationBar}.
+    
+    \item Integrar animaciones de carga y transición, utilizando \texttt{Shimmer} para la carga de datos simulada y \texttt{Lottie} para indicadores visuales, así como \texttt{AnimatedOpacity} para la aparición suave de elementos en pantalla.
+    
+    \item Configurar y desplegar la aplicación final en Firebase App Distribution para permitir pruebas y control de calidad en dispositivos reales.
+\end{itemize}
+
+    \section{Marco Teórico}
+
+    \subsection{Arquitectura Limpia (Clean Architecture)}
+La Arquitectura Limpia, propuesta por Robert C. Martin (Uncle Bob), es un patrón arquitectónico que organiza el código en capas concéntricas con dependencias unidireccionales hacia el centro. Este enfoque promueve la separación de responsabilidades, donde las capas externas dependen de las internas, pero nunca al contrario. En el contexto de aplicaciones móviles Flutter, la arquitectura limpia se implementa típicamente en tres capas principales: la capa de presentación (UI y gestión de estado), la capa de dominio (entidades y casos de uso con la lógica de negocio), y la capa de datos (repositorios y datasources para acceso a datos externos).
+
+Los beneficios principales de esta arquitectura incluyen la independencia de frameworks y librerías externas, facilitando cambios tecnológicos sin afectar la lógica de negocio; la testabilidad mejorada al poder probar cada capa de forma aislada; y la mantenibilidad del código al tener responsabilidades claramente definidas. La implementación requiere interfaces (contratos) que definen las dependencias entre capas, permitiendo la inversión de dependencias y el uso de inyección de dependencias para proporcionar implementaciones concretas.
+
+    \subsection{Flutter Framework}
+Flutter es un framework de código abierto desarrollado por Google para la creación de aplicaciones nativas multiplataforma desde una única base de código. Utiliza el lenguaje de programación Dart y se caracteriza por su motor de renderizado propio (Skia), que permite crear interfaces de usuario consistentes en diferentes plataformas (iOS, Android, Web, Desktop) sin depender de componentes nativos del sistema operativo. Su arquitectura reactiva basada en widgets permite construir interfaces complejas mediante la composición de componentes reutilizables.
+
+El sistema de gestión de estado en Flutter es fundamental para crear aplicaciones reactivas que respondan a cambios en los datos. Existen múltiples soluciones para gestión de estado, incluyendo setState (básico), Provider (recomendado para proyectos medianos), Bloc (para proyectos complejos), y Riverpod (evolución de Provider). El patrón Provider utiliza el concepto de ChangeNotifier para notificar a los widgets cuando los datos cambian, permitiendo reconstrucciones eficientes solo de las partes necesarias de la interfaz.
+
+    \subsection{APIs REST y Protocolo HTTP}
+Las APIs REST (Representational State Transfer) son servicios web que siguen principios arquitectónicos específicos, utilizando el protocolo HTTP para la comunicación cliente-servidor. Los métodos HTTP principales incluyen GET (obtener recursos), POST (crear recursos), PUT (actualizar recursos completos), PATCH (actualizar parcialmente), y DELETE (eliminar recursos). Las APIs REST utilizan endpoints (URLs) para identificar recursos y códigos de estado HTTP (200 OK, 404 Not Found, 500 Internal Server Error) para comunicar el resultado de las operaciones.
+
+El formato JSON (JavaScript Object Notation) es el estándar de facto para el intercambio de datos en APIs REST modernas, ofreciendo una sintaxis ligera y fácil de parsear. La deserialización de JSON en Dart se realiza mediante el método \texttt{jsonDecode()} que convierte strings JSON en estructuras de datos Dart (Maps y Lists), seguido de la creación de modelos fuertemente tipados mediante factory constructors.
+
+    \subsection{Animaciones en Flutter}
+    \subsubsection{Shimmer}
+
+    Es una técnica de diseño d einterfaz conocida como \textit{skeleton loading} (carga esqueleto). Consiste en aplicar un efecto de gradiente animado que se desplaza sobre contenedores con forma de bloques (rectángulos o círculos), imitando la disposición del contenido final. Su objetivo principal es mejorar la percepción de velocidad de la aplicación, indicando al usuario que la interfaz está activa y procesando datos, reduciendo así la tasa de abandono visual comparado con los indicadores de carga tradicionales. 
+    
+    \subsubsection{Lottie}
+
+    Una biblioteca de renderizado de animaciones vectoriales de código abierto. Permite a las aplicaciones utilizar animaciones creadas en Adobe After Effects y exportadas como archivos JSON (mediante el plugin Bodymovin). En Flutter, Lottie parsea estos archivos JSON y los renderiza nativamente, permitiendo animaciones complejas, escalables y de alto rendimiento que serían muy difíciles de codificar manualmente, todo ello con un impacto mínimo en el tamaño del aplicativo.
+
+    \subsubsection{AnimatedOpacity}
+
+    Es un widget de la familia de las \textit{Animaciones Implícitas}. Su función es gestionar automáticamente la interpolación de la opacidad de un widget hijo cuando el valor de entrada cambia. Facilita la creación de transiciones suaves de aparición (Fade In) y desaparición (Fade Out), eliminando la necesidad de gestionar manualmente controladores de animación (\texttt{AnimationController}) para efectos simples de visibilidad.
+    
+    \section{Desarrollo}
+
+\subsection{Paso 1: Configuración del Proyecto}
+El proyecto inició con la creación de una aplicación Flutter estándar y la configuración de las dependencias necesarias en el archivo \texttt{pubspec.yaml}. Se agregaron los paquetes \texttt{lottie} versión 3.3.0, y \texttt{shimmer} versión 3.0.0 para enriquecer la interfaz con animaciones modernas. La estructura de directorios se organizó siguiendo los principios de arquitectura limpia con tres carpetas principales dentro de \texttt{lib/}: \texttt{data}, \texttt{domain} y \texttt{presentation}, cada una conteniendo subcarpetas según su responsabilidad específica.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.35\linewidth]{img/conf.png}
+    \caption{Dependencias del proyecto}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsection{Paso 2: Implementación de la Capa de Dominio}
+La capa de dominio se desarrolló primero, definiendo las entidades que representan conceptos del negocio independientes de cualquier framework. Se creó la entidad base \texttt{BaseEntity} en \texttt{domain/entities/base\_entity.dart} como clase abstracta con propiedades comunes. 
+
+Posteriormente, se implementó \texttt{CharacterEntity} en \texttt{domain/entities/character.dart} extendiendo de BaseEntity, con propiedades como id, name, ki, maxKi, race, gender, image y affiliation, representando los atributos de un personaje de Dragon Ball según la estructura de la API.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{img/domain_character.png}
+    \caption{Clase CharacterEntity}
+    \label{fig:placeholder}
+\end{figure}
+
+El caso de uso \texttt{GetDataUseCase} se implementó en \texttt{domain/usecase/get\_data\_usecase.dart} para encapsular la lógica de obtención de datos. Este caso de uso recibe un repositorio como dependencia y expone un método \texttt{execute()} que delega la obtención de datos al repositorio, permitiendo que la lógica de negocio permanezca independiente de los detalles de implementación de acceso a datos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\linewidth]{img/get_data_usecase.png}
+    \caption{Clase GetDataUseCase}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsection{Paso 3: Implementación de la Capa de Datos}
+En la capa de datos, se creó primero la interfaz abstracta \texttt{BaseDataSource<T>} en \\ \texttt{data/datasources/base\_datasources.dart}, definiendo el contrato para las fuentes de datos con métodos como \texttt{fetchData()}. La implementación concreta \texttt{DragonBallDataSource} en \texttt{data/datasources/dgball\_datasources.dart} extiende esta clase base e implementa la comunicación con la API de Dragon Ball ubicada en \texttt{https://dragonball-api.com/api/characters}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{img/base_datasources.png}
+    \caption{Interfaz Abstracta}
+    \label{fig:placeholder}
+\end{figure}
+
+Se implementaron dos métodos principales en DragonBallDataSource: \texttt{fetchData()} para obtener todos los personajes sin paginación, y \texttt{fetchDataWithPagination()} que acepta parámetros \texttt{page} y \texttt{limit} para implementar paginación del lado del servidor. Ambos métodos utilizan el paquete \texttt{http} para realizar peticiones GET, validan el código de estado HTTP, y deserializan la respuesta JSON utilizando \texttt{jsonDecode()}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{img/api_response.png}
+    \caption{Clase ApiResponse}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\subsection{Paso 4: Implementación de la UI y Animaciones}
+
+Esta fue la fase central del desarrollo visual. Se creó la \texttt{HomePage} como punto de entrada principal.
+
+\subsubsection*{Animaciones de Carga (Shimmer y Lottie)}
+Para mejorar la percepción de velocidad, se implementaron dos tipos de indicadores de carga.
+Cuando la vista es de lista, se muestra un efecto \texttt{Shimmer} personalizado que simula las tarjetas de los personajes:
+
+\begin{lstlisting}[language=Java, caption=Implementación de Shimmer en HomePage]
+// En HomePage.dart
+child: vm.loading && vm.items.isEmpty
+    ? _currentIndex == 0
+          ? _buildShimmerList() 
+          : _buildLottieLoading() 
+\end{lstlisting}
+
+El widget \texttt{ShimmerLoading} fue implementado utilizando un \texttt{ShaderMask} con un gradiente lineal animado mediante un \texttt{AnimationController}, logrando un efecto de barrido suave sin depender excesivamente de librerías pesadas para este componente específico.
+
+\subsubsection*{Animaciones de Entrada (Fade In)}
+Al cargar la pantalla, los elementos no aparecen de golpe. Se usó \texttt{AnimatedOpacity} para crear un efecto de aparición suave una vez que los datos o la vista están listos.
+\newpage
+
+\begin{lstlisting}[language=Java, caption=Uso de AnimatedOpacity]
+// Estado inicial opacidad 0
+double _opacity = 0.0;
+
+Future.delayed(const Duration(milliseconds: 800), () {
+    if (mounted) setState(() { _opacity = 1.0; });
+});
+
+AnimatedOpacity(
+  opacity: _opacity,
+  duration: const Duration(milliseconds: 1200),
+  curve: Curves.easeInOut,
+  child: Column(...),
+)
+\end{lstlisting}
+
+\subsection{Paso 5: Scroll Infinito}
+Para manejar eficientemente grandes volúmenes de datos sin sobrecargar la memoria del dispositivo, se implementó un sistema de paginación con Scroll Infinito. Esto se logró configurando un \texttt{ScrollController} asociado tanto al \texttt{ListView} como al \texttt{GridView}.
+
+Se añadió un \textit{listener} al controlador que monitorea constantemente la posición del scroll de la siguiente manera:
+\begin{lstlisting}[language=Java, caption=Lógica de Scroll Infinito]
+void _onScroll() {
+  if (_scrollController.position.pixels >=
+      _scrollController.position.maxScrollExtent - 200) {
+    final vm = Provider.of<CharacterViewModel>(context, listen: false);
+    vm.loadNextPage();
+  }
+}
+\end{lstlisting}
+
+Esta lógica asegura que, antes de que el usuario llegue al final absoluto de la lista, se dispare una nueva petición a la API. El \texttt{ViewModel} se encarga de gestionar el estado \texttt{loadingMore} para mostrar un pequeño indicador de carga al final de la lista sin bloquear la interfaz principal, concatenando los nuevos resultados a la lista existente.
+
+\subsection{Paso 6: Publicación en Firebase App Distribution}
+Como paso final para la entrega y pruebas del software, se utilizó Firebase App Distribution. Este servicio permite distribuir versiones pre-lanzamiento de la aplicación a testers de confianza de manera rápida y segura.
+
+El proceso de publicación consistió en los siguientes pasos:
+\begin{enumerate}
+    \item \textbf{Configuración del Proyecto:} Se creó un proyecto en la consola de Firebase y se registró la aplicación Android (nombre de paquete \texttt{com.example.pry\_consumo\_api\_dragonball}).
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.5\linewidth]{img/confpry.png}
+        \caption{Configuración del Proyecto}
+        \label{fig:placeholder}
+    \end{figure}
+    \item \textbf{Generación del APK:} Se compiló la versión de lanzamiento de la aplicación ejecutando el comando \texttt{flutter build apk --release}. Esto generó un archivo \texttt{.apk} optimizado.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1\linewidth]{img/apk.png}
+        \caption{Generación del archivo apk}
+        \label{fig:placeholder}
+    \end{figure}
+    
+    \item \textbf{Subida del Artefacto:} El archivo \texttt{app-release.apk} se subió a la consola de Firebase App Distribution.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\linewidth]{img/artefacto.png}
+        \caption{Carga del archivo app-release}
+        \label{fig:placeholder}
+    \end{figure}
+    
+    \item \textbf{Gestión de Testers:} Se añadieron los correos electrónicos de los testers (incluyendo al desarrollador) a un grupo de distribución. Al finalizar la subida, se verificó que la notificación llegara correctamente vía correo electrónico, permitiendo la descarga e instalación directa del aplicativo en dispositivos físicos para las pruebas de campo.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\linewidth]{img/verificadores.png}
+        \caption{Testers}
+        \label{fig:placeholder}
+    \end{figure}
+    
+\end{enumerate}
+
+
+\section{Resultados}
+
+\subsection{Pantalla de Carga}
+
+Muestra animaciones Shimmer (esqueleto) o Lottie dependiendo de la vista seleccionada, informando al usuario que la data está siendo procesada.
+
+\subsection{Visualización de Datos}
+
+Los personajes se listan correctamente con sus imágenes, nombres y estadísticas (Ki, Raza, Afiliación).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{img/card.png}
+    \caption{Información del personaje}
+    \label{fig:placeholder}
+\end{figure}
+
+\newpage
+
+\subsection{Transiciones}
+
+El cambio entre Lista y Cuadrícula (Grid) es animado, así como la aparición inicial de los elementos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{img/grid.png}
+    \caption{Cuadrícula de Personajes}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsection{Interacción}
+
+El scroll infinito permite navegar por cientos de personajes sin interrupciones notables.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\linewidth]{img/list.png}
+    \caption{Paginación Funcional}
+    \label{fig:placeholder}
+\end{figure}
+
+% ============================
+%       CONCLUSIONES
+% ============================
+
+\section{Conclusiones}
+
+\begin{enumerate}
+    \item La integración de animaciones avanzadas como Shimmer, Lottie y AnimatedOpacity cumplió el objetivo de mejorar la experiencia de usuario. Estas herramientas transformaron los tiempos de carga y las transiciones de pantalla en interacciones fluidas y estéticamente agradables.
+    
+    \item Se estableció una relación directa entre el uso de Clean Architecture y la facilidad de mantenimiento del código. Esta estructura permitió aislar la lógica de la vista, facilitando la implementación de animaciones complejas en la UI sin afectar la lógica de negocio.
+    
+    \item Se completó satisfactoriamente la configuración y despliegue del aplicativo en Firebase App Distribution. Esto permitió realizar pruebas de control de calidad en dispositivos reales de manera eficiente, asegurando que la aplicación funcione correctamente en un entorno de producción antes de su lanzamiento definitivo. 
+\end{enumerate}
+
+\section{Recomendaciones}
+
+\begin{enumerate}
+    \item Se recomienda implementar caché local utilizando paquetes como \texttt{shared\_preferences} o \texttt{hive} para persistir los datos descargados de la API, permitiendo que la aplicación funcione offline y reduciendo el consumo de datos del usuario. Esto mejoraría significativamente la experiencia al eliminar tiempos de espera en lanzamientos posteriores de la aplicación.
+
+    \item Se sugiere explorar más a fondo las animaciones implícitas de Flutter (como \texttt{AnimatedContainer}, \texttt{AnimatedPositioned}) para enriquecer aún más las micro-interacciones dentro de las tarjetas de los personajes, por ejemplo, al expandir detalles.
+
+    \item  Para futuras iteraciones, sería ideal implementar pruebas unitarias y de widgets (Testing) para asegurar que las animaciones y la lógica de paginación funcionen correctamente ante diferentes estados de la API (errores, tiempos de espera).
+\end{enumerate}
+
+% ============================
+%       BIBLIOGRAFÍA
+% ============================
+
+\section{Bibliografía}
+
+\begin{itemize}
+    \item Create a shimmer loading effect. (s/f). Flutter.dev. Recuperado el 7 de diciembre de 2025, \url{https://docs.flutter.dev/cookbook/effects/shimmer-loading} 
+    \item Design Barn Inc. (s/f). \textit{Lottie Files.} Lottiefiles.com. Recuperado el 5 de diciembre de 2025, \url{https://lottiefiles.com/es/}
+    \item Google. (2024). \textit{Material Design 3}. \url{https://m3.material.io/}
+    \item Flutter Community. (2024). \textit{Flutter package}. Recuperado el 21 de noviembre de 2025, de \url{https://pub.dev/packages/provider}
+    \item Flutter.dev. (2024) \textit{Widgets.} Recuperado el 21 de noviembre de 2025, de \url{https://docs.flutter.dev/get-started/fundamentals/widgets}
+    \item  Flutter.dev. \textit{Simple app state management.} Recuperado el 23 de noviembre de 2025, de \url{https://docs.flutter.dev/data-and-backend/state-mgmt/simple}
+\end{itemize}
+
+\section{Anexos}
+
+\subsection{Estructura del Proyecto}
+
+El proyecto fue estructurado siguiendo los principios de Clean Architecture, organizando el código en carpetas específicas para cada capa:
+
+\begin{verbatim}
+lib/
+|-- main.dart
+|-- src/
+    |-- data/
+    |   |-- datasources/
+    |       |-- base_datasources.dart
+    |       |-- dgball_datasources.dart
+    |   |-- models/
+    |       |-- api_response.dart
+    |       |-- character_model.dart
+    |       |-- pagination_links.dart
+    |       |-- pagination_meta.dart
+    |   |-- repositories/
+    |       |-- pagination_meta.dart
+    |       |-- character_repository.dart
+    |-- domain/
+    |   |-- entities/
+    |   |   |-- base_entity.dart
+    |   |   |-- character.dart
+    |   |-- usecases/
+    |       |-- get_data_usecase.dart
+    |-- presentation/
+        |-- routes/
+        |   |-- app_routes.dart
+        |-- viewmodels/
+        |   |-- base_viewmodel.dart
+        |   |-- character_viewmodel.dart
+        |-- views/
+        |    |-- home_page.dart
+        |-- widgets/
+        |    |-- shimmer_widget.dart
+    main.dart
+\end{verbatim}
+
+\subsection{Link del Proyecto:} \url{vhttps://drive.google.com/file/d/1KQKoRCsQwQfFv5ZkhUb2oE8uqwLHHlHb/view?usp=sharing}
+\subsection{Link del API:} \url{https://web.dragonball-api.com/}
+
+\newpage
+
+\subsection{Publicación del APK}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{img/invitacion.jpg}
+    \caption{Apk públicado}
+    \label{fig:placeholder}
+\end{figure}
+
+\newpage
+
+\subsection{Instalación de archivo apk en dispositivo android}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{img/instalacion.jpg}
+    \caption{Instalación de apk}
+    \label{fig:placeholder}
+\end{figure}
+
+\newpage
+
+\subsection{Visualización del apk en dispositivo Andorid}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.43\linewidth]{img/visualizacion.jpg}
+    \caption{Ejecución del archivo apk}
+    \label{fig:placeholder}
+\end{figure}
+
+\newpage
+
+\subsection{Fuente de datos The Dragon Ball API.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/api.png}
+    \caption{Vista original de The Dragon Ball API.}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\end{document}
